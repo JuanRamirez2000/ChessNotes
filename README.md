@@ -1,28 +1,56 @@
-# Create T3 App
+# An app inspired by Kamryn's youtube video on how to improve at chess
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## Description
 
-## What's next? How do I make an app with this?
+Currently the app is supposed to showcase full stack knowledge by 
+"hopefully" devloping something that will allow me to improve at 
+my chess. This app will hopefully be iteratively added on by 
+creating new features focused on analyzing games and theory
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+The app is made around the chess.com web-api, however support for LiChess is under consideration
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## The phases
 
-## Learn More
+- Phase 1
+    Revolved around getting the basic groundwork for an individual to annotate their previous games
+    - User authentication
+    - Chess notes and annotations
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- Phase 2
+    - Theory annotation
+    - Opening/Endgame anlysis
+    - Notes Sharing
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+- Phase 3
+    - Collaborative notes
+    - Chess studies
+    - Notes sharing
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+## The Stack
 
-## How do I deploy this?
+This project currently works under the t3 stack. For specifics
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+### Frontend tech
+
+- ReactJS + TypescriptJS
+- TailwindCSS
+
+
+### Backend tech
+
+- PrismaDB
+- TRPC
+- Clerk (auth)
+
+### Infra
+
+- Vercel
+- PlanetScale
+
+## Current plans
+
+- [x] Handle authentication
+- [ ] Understand database management
+- [ ] Understand how to query the database efficiently
+- [ ] Query the Chess.com webapi
