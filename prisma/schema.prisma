@@ -11,8 +11,11 @@ generator client {
     provider = "prisma-client-js"
 }
 
-model Example {
+model ChessNotes {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    title     String?
+    notes     String
+    gameID    String   @unique()
 }
