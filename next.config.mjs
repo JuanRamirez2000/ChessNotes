@@ -25,5 +25,8 @@ const config = withBundleAnalyzer({
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ['images.chesscomfiles.com']
+  }
 });
 export default config;

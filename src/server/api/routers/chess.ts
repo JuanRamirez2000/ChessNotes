@@ -1,11 +1,12 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, publicProcedure } from "../trpc";
 import axios from "axios";
 import type {
   MonthlyGamesArchive,
   ChessComPlayer,
   MonthlyGamesLinks,
 } from "~/interfaces/ChessInterfaces";
+import { clerkClient } from "@clerk/nextjs";
 
 const grabUsersMonthlyGames = async (chessComUsername: string) => {
   const archivesRes = await axios.get<MonthlyGamesLinks>(
@@ -26,14 +27,20 @@ const grabUsersMonthlyGames = async (chessComUsername: string) => {
 };
 
 export const chessRouter = createTRPCRouter({
-  //getChessNotes: protectedProcedure.query(async ({ ctx }) => {
-  //  const notes = await ctx.prisma.chessNotes.findMany({
-  //    where: {
-  //      authorID: ctx.auth.userId,
-  //    },
-  //  });
-  //  return notes;
-  //}),
+  savePlayerUsernameToClerk: publicProcedure
+    .input(
+      z.object({
+        chessUsername: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+      await clerkClient.users.updateUser(ctx.auth.userId!, {
+        publicMetadata: {
+          chessUsername: input.chessUsername,
+        },
+      });
+    }),
   getChessComPlayerProfile: publicProcedure
     .input(
       z.object({
@@ -41,11 +48,15 @@ export const chessRouter = createTRPCRouter({
       })
     )
     .query(async ({ input }) => {
-      const res = await axios.get<ChessComPlayer>(
-        `https://api.chess.com/pub/player/${input.chessUsername}`
-      );
-      if (res.status === 200) {
-        return res.data;
+      try {
+        const res = await axios.get<ChessComPlayer>(
+          `https://api.chess.com/pub/player/${input.chessUsername}`
+        );
+        if (res.status === 200) {
+          return res.data;
+        }
+      } catch (error) {
+        //console.error(error);
       }
     }),
   getChessComPlayerGames: publicProcedure
