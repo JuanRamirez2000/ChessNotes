@@ -18,12 +18,12 @@ const Home: NextPage = () => {
       {user.user?.publicMetadata.chessUsername ? (
         <Link
           className="rounded-lg bg-emerald-400 px-4 py-2 font-bold"
-          href={"/user"}
+          href="/user"
         >
           UserPage
         </Link>
       ) : (
-        <Link href={"/userSignUp"}>Connect Chess Account</Link>
+        <Link href="/user-sign-up">Connect Chess Account</Link>
       )}
     </>
   );

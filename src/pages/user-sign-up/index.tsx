@@ -15,7 +15,7 @@ interface FormInputs {
   chessUsername: string;
 }
 
-export default function UserSignup() {
+export default function UserSignuUp() {
   const [player, setChessPlayer] = useState<ChessComPlayer | undefined>();
   const router = useRouter();
 
