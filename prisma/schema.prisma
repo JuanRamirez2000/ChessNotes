@@ -15,22 +15,23 @@ model ChessUserProfile {
     playerId Int     @id @unique
     username String  @unique
     title    String?
-    fide     Int
+    fide     Int?
 
-    userPlayerProfile ChessComPlayer?
-    userNotebooks     ChessNotebook[]
-    userGames         ChessComGame[]
+    //userPlayerProfile ChessComPlayer?
+    userNotebooks ChessNotebook[]
+    //userGames         ChessComGame[]
 
     @@index([username])
 }
 
 model ChessComPlayer {
-    id       String @id
-    rating   String
-    username String @unique
-    uuid     String
+    username String  @id @unique
+    rating   Int?
+    uuid     String?
 
-    chessUser ChessUserProfile @relation(fields: [username], references: [username])
+    games ChessComGame[]
+
+    //chessUser ChessUserProfile @relation(fields: [username], references: [username])
 
     @@index([username])
 }
@@ -50,27 +51,27 @@ model ChessNotebook {
 }
 
 model ChessComGame {
-    url         String                 @id @unique()
-    fen         String
-    pgn         String
-    rated       String
-    timeClass   String
-    timeControl String
-    uuid        String
-    accuracies  ChessPlayerAccuracies?
+    url              String                 @id
+    fen              String?
+    pgn              String?                @db.Text
+    rated            Boolean?
+    timeClass        String?
+    timeControl      String?
+    uuid             String?
+    playerAccuracies ChessPlayerAccuracies?
+    players          ChessComPlayer[]
 
-    gamePlayer ChessUserProfile[]
-    notebook   ChessNotebook      @relation(fields: [notebookId], references: [id])
-    notebookId Int                @unique
+    notebook   ChessNotebook? @relation(fields: [notebookId], references: [id])
+    notebookId Int?           @unique
 
     @@index([url])
 }
 
 model ChessPlayerAccuracies {
-    id     String       @id
-    black  Int
-    white  Int
-    gameID ChessComGame @relation(fields: [id], references: [url])
+    id     String        @id
+    black  Float?
+    white  Float?
+    gameID ChessComGame? @relation(fields: [id], references: [url])
 
     @@index([id])
 }

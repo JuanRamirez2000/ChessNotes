@@ -10,9 +10,9 @@ export default function UserLoggedInLayout({
   return (
     <div className="flex h-screen flex-col">
       <Navbar />
-      <div className="h-full w-screen flex-1 grow bg-cyan-400">
+      <div className="flex h-full w-full flex-row bg-cyan-400">
         <Sidebar />
-        {children}
+        <main>{children}</main>
       </div>
       <Footer />
     </div>

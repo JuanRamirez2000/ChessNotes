@@ -1,30 +1,59 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import axios from "axios";
 import type {
   MonthlyGamesArchive,
   ChessComPlayer,
   MonthlyGamesLinks,
+  ChessComGame,
 } from "~/interfaces/ChessInterfaces";
 import { clerkClient } from "@clerk/nextjs";
+import { url } from "inspector";
 
 const grabUsersMonthlyGames = async (chessComUsername: string) => {
-  const archivesRes = await axios.get<MonthlyGamesLinks>(
-    `https://api.chess.com/pub/player/${chessComUsername}/games/archives`
-  );
-  const multipleMonthRes = await axios.all(
-    archivesRes.data.archives.map(
-      async (url) => await axios.get<MonthlyGamesArchive>(url)
-    )
-  );
+  try {
+    const archivesRes = await axios.get<MonthlyGamesLinks>(
+      `https://api.chess.com/pub/player/${chessComUsername}/games/archives`
+    );
+    const mostRecentMonth =
+      archivesRes.data.archives[archivesRes.data.archives.length - 1];
+    if (mostRecentMonth) {
+      const {
+        data: { games },
+      } = await axios.get<MonthlyGamesArchive>(mostRecentMonth);
 
-  const games = multipleMonthRes.flatMap((monthRes) => {
-    if (monthRes.data) {
-      return monthRes.data.games;
+      const reducedGames = games.map(
+        ({
+          end_time,
+          initial_setup,
+          rules,
+          tcn,
+          time_class: timeClass,
+          time_control: timeControl,
+
+          ...game
+        }) => ({ timeClass, timeControl, ...game })
+      );
+      return reducedGames;
     }
-  });
-  return games;
+  } catch (error) {
+    console.error(error);
+  }
 };
+//! This code is meant for the endpoint above
+//! The reason it is not working is because of chess.com's web api rate limit
+//! A fix for this is to implement OAuth, which will be done some other time
+//const multipleMonthRes = await axios.all(
+//  archivesRes.data.archives.map(
+//    async (url) => await axios.get<MonthlyGamesArchive>(url)
+//  )
+//);
+//
+//const games = multipleMonthRes.flatMap((monthRes) => {
+//  if (monthRes.data) {
+//    return monthRes.data.games;
+//  }
+//});
 
 export const chessRouter = createTRPCRouter({
   savePlayerUsernameToClerk: publicProcedure
@@ -59,7 +88,7 @@ export const chessRouter = createTRPCRouter({
         //console.error(error);
       }
     }),
-  getChessComPlayerGames: publicProcedure
+  getChessComPlayerGames: protectedProcedure
     .input(
       z.object({
         chessUsername: z.string(),
@@ -73,18 +102,57 @@ export const chessRouter = createTRPCRouter({
         console.error(error);
       }
     }),
-  //saveGamesToPlayer: protectedProcedure
-  //  .input(
-  //    z.object({
-  //      chessUserName: z.string(),
-  //    })
-  //  )
-  //  .mutation(async ({ ctx, input }) => {
-  //    try {
-  //      const games = grabUsersMonthlyGames(input.chessUserName)
-  //      return await ctx.prisma.
-  //    } catch (error) {
-  //      console.error(error);
-  //    }
-  //  }),
+  saveGamesToPlayer: protectedProcedure.mutation(async ({ ctx }) => {
+    try {
+      const user = await clerkClient.users.getUser(ctx.auth.userId);
+      const { chessUsername } = user.publicMetadata as UserPublicMetadata & {
+        chessUsername: string;
+      };
+      const userGames = await grabUsersMonthlyGames(chessUsername);
+      console.log(userGames?.length);
+      if (userGames) {
+        userGames.map(async (game) => {
+          await ctx.prisma.chessComGame.create({
+            data: {
+              playerAccuracies: {
+                create: {
+                  black: game.accuracies.black,
+                  white: game.accuracies.white,
+                },
+              },
+              players: {
+                connectOrCreate: [
+                  {
+                    where: { username: game.black.username },
+                    create: {
+                      username: game.black.username,
+                      rating: game.black.rating,
+                      uuid: game.black.uuid,
+                    },
+                  },
+                  {
+                    where: { username: game.white.username },
+                    create: {
+                      username: game.white.username,
+                      rating: game.white.rating,
+                      uuid: game.white.uuid,
+                    },
+                  },
+                ],
+              },
+              fen: game.fen,
+              pgn: game.pgn,
+              rated: game.rated,
+              url: game.url,
+              timeClass: game.timeClass,
+              timeControl: game.timeControl,
+              uuid: game.uuid,
+            },
+          });
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }),
 });

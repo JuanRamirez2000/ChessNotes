@@ -22,8 +22,8 @@ interface ChessComPlayer {
 }
 
 interface ReducedChessComPlayer {
-  "@id": URL;
-  rating: string;
+  "@id": string;
+  rating: number;
   username: string;
   uuid: string;
 }
@@ -37,7 +37,7 @@ interface MonthlyGamesArchive {
 }
 
 interface ChessComGame {
-  accurracies: {
+  accuracies: {
     black: number;
     white: number;
   };
@@ -46,12 +46,12 @@ interface ChessComGame {
   fen: string;
   initial_setup: string;
   pgn: string;
-  rated: string;
+  rated: boolean;
   rules: ChessRules;
   tcn: string;
   time_class: TimeClass;
   time_control: string;
-  url: URL;
+  url: string;
   uuid: string;
   white: ReducedChessComPlayer;
 }
