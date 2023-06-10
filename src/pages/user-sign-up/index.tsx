@@ -19,7 +19,17 @@ export default function UserSignuUp() {
   const [player, setChessPlayer] = useState<ChessComPlayer | undefined>();
   const router = useRouter();
 
-  const mutation = api.chess.savePlayerUsernameToClerk.useMutation({
+  const chessUserMutation = api.chess.savePlayerToPrisma.useMutation({
+    onSuccess: async () => {
+      toast.success("User Saved To Databse!");
+      await router.push("/user");
+    },
+    onError: () => {
+      toast.error("Failed Saving User");
+    },
+  });
+
+  const clerkMutation = api.chess.savePlayerUsernameToClerk.useMutation({
     onSuccess: async () => {
       toast.success("User Saved!");
       await router.push("/user");
@@ -48,7 +58,13 @@ export default function UserSignuUp() {
 
   const connectPlayer = () => {
     if (player) {
-      mutation.mutate({ chessUsername: player.username });
+      clerkMutation.mutate({ chessUsername: player.username });
+      chessUserMutation.mutate({
+        username: player.username,
+        fide: player.fide,
+        title: player.title,
+        avatar: player.avatar,
+      });
     }
   };
 

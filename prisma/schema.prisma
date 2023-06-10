@@ -12,10 +12,11 @@ generator client {
 }
 
 model ChessUserProfile {
-    playerId Int     @id @unique
-    username String  @unique
-    title    String?
-    fide     Int?
+    username  String  @id @unique
+    playerId  String  @unique
+    avatarURL String?
+    title     String?
+    fide      Int?
 
     //userPlayerProfile ChessComPlayer?
     userNotebooks ChessNotebook[]
@@ -29,7 +30,7 @@ model ChessComPlayer {
     rating   Int?
     uuid     String?
 
-    games ChessComGame[]
+    games ChessComPlayersInGame[]
 
     //chessUser ChessUserProfile @relation(fields: [username], references: [username])
 
@@ -51,20 +52,29 @@ model ChessNotebook {
 }
 
 model ChessComGame {
-    url              String                 @id
+    url              String                  @id
     fen              String?
-    pgn              String?                @db.Text
+    pgn              String?                 @db.Text
     rated            Boolean?
     timeClass        String?
     timeControl      String?
-    uuid             String?
     playerAccuracies ChessPlayerAccuracies?
-    players          ChessComPlayer[]
+    players          ChessComPlayersInGame[]
 
     notebook   ChessNotebook? @relation(fields: [notebookId], references: [id])
     notebookId Int?           @unique
 
     @@index([url])
+}
+
+model ChessComPlayersInGame {
+    game     ChessComGame   @relation(fields: [gameId], references: [url])
+    gameId   String
+    player   ChessComPlayer @relation(fields: [playerId], references: [username])
+    playerId String
+
+    @@id([gameId, playerId])
+    @@index([playerId])
 }
 
 model ChessPlayerAccuracies {

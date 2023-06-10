@@ -5,10 +5,9 @@ import type {
   MonthlyGamesArchive,
   ChessComPlayer,
   MonthlyGamesLinks,
-  ChessComGame,
+  //ChessComGame,
 } from "~/interfaces/ChessInterfaces";
 import { clerkClient } from "@clerk/nextjs";
-import { url } from "inspector";
 
 const grabUsersMonthlyGames = async (chessComUsername: string) => {
   try {
@@ -21,20 +20,7 @@ const grabUsersMonthlyGames = async (chessComUsername: string) => {
       const {
         data: { games },
       } = await axios.get<MonthlyGamesArchive>(mostRecentMonth);
-
-      const reducedGames = games.map(
-        ({
-          end_time,
-          initial_setup,
-          rules,
-          tcn,
-          time_class: timeClass,
-          time_control: timeControl,
-
-          ...game
-        }) => ({ timeClass, timeControl, ...game })
-      );
-      return reducedGames;
+      return games;
     }
   } catch (error) {
     console.error(error);
@@ -56,6 +42,30 @@ const grabUsersMonthlyGames = async (chessComUsername: string) => {
 //});
 
 export const chessRouter = createTRPCRouter({
+  savePlayerToPrisma: protectedProcedure
+    .input(
+      z.object({
+        username: z.string(),
+        title: z.string().optional(),
+        fide: z.number().optional(),
+        avatar: z.string().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.chessUserProfile.create({
+          data: {
+            playerId: ctx.auth.userId,
+            username: input.username,
+            fide: input.fide,
+            title: input.title,
+          },
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }),
+
   savePlayerUsernameToClerk: publicProcedure
     .input(
       z.object({
@@ -109,33 +119,49 @@ export const chessRouter = createTRPCRouter({
         chessUsername: string;
       };
       const userGames = await grabUsersMonthlyGames(chessUsername);
-      console.log(userGames?.length);
+
+      const renamedGames = userGames?.map(
+        ({
+          time_class: timeClass,
+          time_control: timeControl,
+
+          ...game
+        }) => ({ timeClass, timeControl, ...game })
+      );
       if (userGames) {
-        userGames.map(async (game) => {
+        renamedGames?.map(async (game) => {
           await ctx.prisma.chessComGame.create({
             data: {
-              playerAccuracies: {
-                create: {
-                  black: game.accuracies.black,
-                  white: game.accuracies.white,
-                },
-              },
+              //playerAccuracies: {
+              //  create: {
+              //    black: game.accuracies.black,
+              //    white: game.accuracies.white,
+              //  },
+              //},
               players: {
-                connectOrCreate: [
+                create: [
                   {
-                    where: { username: game.black.username },
-                    create: {
-                      username: game.black.username,
-                      rating: game.black.rating,
-                      uuid: game.black.uuid,
+                    player: {
+                      connectOrCreate: {
+                        where: { username: game.black.username },
+                        create: {
+                          username: game.black.username,
+                          rating: game.black.rating,
+                          uuid: game.black.uuid,
+                        },
+                      },
                     },
                   },
                   {
-                    where: { username: game.white.username },
-                    create: {
-                      username: game.white.username,
-                      rating: game.white.rating,
-                      uuid: game.white.uuid,
+                    player: {
+                      connectOrCreate: {
+                        where: { username: game.white.username },
+                        create: {
+                          username: game.white.username,
+                          rating: game.white.rating,
+                          uuid: game.white.uuid,
+                        },
+                      },
                     },
                   },
                 ],
@@ -146,7 +172,6 @@ export const chessRouter = createTRPCRouter({
               url: game.url,
               timeClass: game.timeClass,
               timeControl: game.timeControl,
-              uuid: game.uuid,
             },
           });
         });

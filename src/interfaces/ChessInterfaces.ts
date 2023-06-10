@@ -1,7 +1,7 @@
 import type { Status, ChessRules, TimeClass } from "~/types/ChessComTypes";
 
 interface ChessComPlayer {
-  "@id": URL;
+  "@id": string;
   avatar?: string;
   country: string;
   fide: number;
