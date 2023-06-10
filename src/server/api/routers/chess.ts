@@ -55,10 +55,11 @@ export const chessRouter = createTRPCRouter({
       try {
         await ctx.prisma.chessUserProfile.create({
           data: {
-            playerId: ctx.auth.userId,
+            userID: ctx.auth.userId,
             username: input.username,
             fide: input.fide,
             title: input.title,
+            avatarURL: input.avatar,
           },
         });
       } catch (error) {
@@ -128,8 +129,13 @@ export const chessRouter = createTRPCRouter({
           ...game
         }) => ({ timeClass, timeControl, ...game })
       );
+
       if (userGames) {
+        let chessRating = 0;
         renamedGames?.map(async (game) => {
+          chessUsername === game.white.username
+            ? (chessRating = game.white.rating)
+            : (chessRating = game.white.rating);
           await ctx.prisma.chessComGame.create({
             data: {
               //playerAccuracies: {
@@ -147,7 +153,6 @@ export const chessRouter = createTRPCRouter({
                         create: {
                           username: game.black.username,
                           rating: game.black.rating,
-                          uuid: game.black.uuid,
                         },
                       },
                     },
@@ -159,7 +164,6 @@ export const chessRouter = createTRPCRouter({
                         create: {
                           username: game.white.username,
                           rating: game.white.rating,
-                          uuid: game.white.uuid,
                         },
                       },
                     },
@@ -174,6 +178,14 @@ export const chessRouter = createTRPCRouter({
               timeControl: game.timeControl,
             },
           });
+        });
+        await ctx.prisma.chessUserProfile.update({
+          where: {
+            username: chessUsername,
+          },
+          data: {
+            rating: chessRating,
+          },
         });
       }
     } catch (error) {

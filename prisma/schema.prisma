@@ -13,26 +13,16 @@ generator client {
 
 model ChessUserProfile {
     username  String  @id @unique
-    playerId  String  @unique
+    userID    String? @unique
     avatarURL String?
     title     String?
     fide      Int?
+    rating    Int?
 
     //userPlayerProfile ChessComPlayer?
     userNotebooks ChessNotebook[]
+    games         ChessComPlayersInGame[]
     //userGames         ChessComGame[]
-
-    @@index([username])
-}
-
-model ChessComPlayer {
-    username String  @id @unique
-    rating   Int?
-    uuid     String?
-
-    games ChessComPlayersInGame[]
-
-    //chessUser ChessUserProfile @relation(fields: [username], references: [username])
 
     @@index([username])
 }
@@ -52,14 +42,14 @@ model ChessNotebook {
 }
 
 model ChessComGame {
-    url              String                  @id
-    fen              String?
-    pgn              String?                 @db.Text
-    rated            Boolean?
-    timeClass        String?
-    timeControl      String?
-    playerAccuracies ChessPlayerAccuracies?
-    players          ChessComPlayersInGame[]
+    url         String                  @id
+    fen         String?
+    pgn         String?                 @db.Text
+    rated       Boolean?
+    timeClass   String?
+    timeControl String?
+    //playerAccuracies ChessPlayerAccuracies?
+    players     ChessComPlayersInGame[]
 
     notebook   ChessNotebook? @relation(fields: [notebookId], references: [id])
     notebookId Int?           @unique
@@ -68,20 +58,20 @@ model ChessComGame {
 }
 
 model ChessComPlayersInGame {
-    game     ChessComGame   @relation(fields: [gameId], references: [url])
+    game     ChessComGame     @relation(fields: [gameId], references: [url])
     gameId   String
-    player   ChessComPlayer @relation(fields: [playerId], references: [username])
+    player   ChessUserProfile @relation(fields: [playerId], references: [username])
     playerId String
 
     @@id([gameId, playerId])
     @@index([playerId])
 }
 
-model ChessPlayerAccuracies {
-    id     String        @id
-    black  Float?
-    white  Float?
-    gameID ChessComGame? @relation(fields: [id], references: [url])
-
-    @@index([id])
-}
+//model ChessPlayerAccuracies {
+//    id     String        @id
+//    black  Float?
+//    white  Float?
+//    gameID ChessComGame? @relation(fields: [id], references: [url])
+//
+//    @@index([id])
+//}
