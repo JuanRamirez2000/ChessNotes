@@ -51,6 +51,11 @@ This project currently works under the t3 stack. For specifics
 ## Current plans
 
 - [x] Handle authentication
-- [ ] Understand database management
-- [ ] Understand how to query the database efficiently
-- [ ] Query the Chess.com webapi
+- [x] Understand database management
+- [x] Understand how to query the database efficiently
+- [x] Query the Chess.com webapi
+- [ ] Restructure chess router to include user auth 
+- [ ] Handle games query when users are logged in
+- [ ] Display games as a list on the user home page
+- [ ] Understand NextJS dynamic routing
+- [ ] Create an "Analysis" that connects a notebook, chess game, and notes

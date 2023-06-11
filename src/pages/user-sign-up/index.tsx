@@ -6,10 +6,10 @@ import {
   MagnifyingGlassIcon,
   ArrowDownOnSquareIcon,
 } from "@heroicons/react/24/outline";
-import axios from "axios";
 import type { ChessComPlayer } from "~/interfaces/ChessInterfaces";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { getChessComPlayerProfile } from "~/helpers/getChessComPlayerProfile";
 
 interface FormInputs {
   chessUsername: string;
@@ -40,12 +40,11 @@ export default function UserSignuUp() {
   });
   const fetchChessProfile = async (chessUsername: string) => {
     try {
-      const res = await axios.get<ChessComPlayer>(
-        `https://api.chess.com/pub/player/${chessUsername}`
-      );
-      if (res.status === 200) {
+      const profile = await getChessComPlayerProfile(chessUsername);
+
+      if (profile) {
         toast.success("User Found!");
-        return res.data;
+        return profile;
       } else {
         toast.error("No User Found");
         return undefined;

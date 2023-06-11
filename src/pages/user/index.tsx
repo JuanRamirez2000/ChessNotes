@@ -3,6 +3,8 @@ import type { NextPageWithLayout } from "../_app";
 import { api } from "~/utils/api";
 
 const User: NextPageWithLayout = () => {
+  //const {data: userGames} = api.chess.
+
   const mutation = api.chess.saveGamesToPlayer.useMutation();
 
   const handleDownload = () => {
