@@ -15,8 +15,14 @@ export const chessRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.prisma.chessUserProfile.create({
-          data: {
+        await ctx.prisma.chessUserProfile.upsert({
+          where: {
+            username: input.username,
+          },
+          update: {
+            userID: ctx.auth.userId,
+          },
+          create: {
             userID: ctx.auth.userId,
             username: input.username,
             fide: input.fide,
@@ -52,20 +58,46 @@ export const chessRouter = createTRPCRouter({
       const userGames = await grabUsersMonthlyGames(chessUsername);
 
       const renamedGames = userGames?.map(
-        ({
-          time_class: timeClass,
-          time_control: timeControl,
-
-          ...game
-        }) => ({ timeClass, timeControl, ...game })
+        ({ time_class: timeClass, time_control: timeControl, ...game }) => ({
+          timeClass,
+          timeControl,
+          ...game,
+        })
       );
 
       if (userGames) {
+        //!This is a current bug. Chess Rating doesnt reflect the most
+        //most current rating...I shall fix this later
+        //this also doesnt differentiate between bullet/blitz/rapid
+        //this will also be fixed later....
+
         let chessRating = 0;
         renamedGames?.map(async (game) => {
           chessUsername === game.white.username
             ? (chessRating = game.white.rating)
             : (chessRating = game.white.rating);
+
+          let gameResult = "";
+          switch (game.white.result) {
+            case "win":
+              gameResult = "white-win";
+              break;
+            case "checkmated":
+              gameResult = "black-win";
+            case "resigned":
+              gameResult = "black-win";
+              break;
+            case "timeout":
+              gameResult = "black-win";
+              break;
+            case "abandoned":
+              gameResult = "black-win";
+            case "lose":
+              gameResult = "black-win";
+              break;
+            default:
+              gameResult = "draw";
+          }
           await ctx.prisma.chessComGame.create({
             data: {
               //playerAccuracies: {
@@ -106,6 +138,9 @@ export const chessRouter = createTRPCRouter({
               url: game.url,
               timeClass: game.timeClass,
               timeControl: game.timeControl,
+              whiteUsername: game.white.username,
+              blackUsername: game.black.username,
+              gameResult: gameResult,
             },
           });
         });
@@ -117,6 +152,43 @@ export const chessRouter = createTRPCRouter({
             rating: chessRating,
           },
         });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }),
+  getGamesFromChessUser: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const user = await ctx.prisma.chessUserProfile.findUnique({
+        where: {
+          userID: ctx.auth.userId,
+        },
+        include: {
+          games: {
+            select: {
+              game: {
+                select: {
+                  url: true,
+                  rated: true,
+                  timeClass: true,
+                  timeControl: true,
+                  gameResult: true,
+                  whiteUsername: true,
+                  blackUsername: true,
+                  players: {
+                    select: {
+                      player: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+      if (user) {
+        const games = user.games.flatMap((game) => game.game);
+        return games;
       }
     } catch (error) {
       console.error(error);

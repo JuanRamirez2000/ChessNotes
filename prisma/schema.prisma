@@ -42,14 +42,17 @@ model ChessNotebook {
 }
 
 model ChessComGame {
-    url         String                  @id
-    fen         String?
-    pgn         String?                 @db.Text
-    rated       Boolean?
-    timeClass   String?
-    timeControl String?
+    url           String                  @id
+    fen           String?
+    pgn           String?                 @db.Text
+    rated         Boolean?
+    timeClass     String?
+    timeControl   String?
+    gameResult    String?
+    whiteUsername String?
+    blackUsername String?
     //playerAccuracies ChessPlayerAccuracies?
-    players     ChessComPlayersInGame[]
+    players       ChessComPlayersInGame[]
 
     notebook   ChessNotebook? @relation(fields: [notebookId], references: [id])
     notebookId Int?           @unique

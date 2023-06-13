@@ -1,4 +1,9 @@
-import type { Status, ChessRules, TimeClass } from "~/types/ChessComTypes";
+import type {
+  Status,
+  ChessRules,
+  TimeClass,
+  GameResult,
+} from "~/types/ChessComTypes";
 
 interface ChessComPlayer {
   "@id": string;
@@ -23,6 +28,7 @@ interface ChessComPlayer {
 
 interface ReducedChessComPlayer {
   "@id": string;
+  result: GameResult;
   rating: number;
   username: string;
   uuid: string;

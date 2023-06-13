@@ -16,4 +16,17 @@ type ChessRules =
 
 type TimeClass = "daily" | "rapid" | "blitz" | "bullet";
 
-export type { Status, ChessRules, TimeClass };
+type GameResult =
+  | "win"
+  | "checkmated"
+  | "agreed"
+  | "repitiion"
+  | "timeout"
+  | "resigned"
+  | "stalemate"
+  | "lose"
+  | "insufficient"
+  | "50move"
+  | "abandoned";
+
+export type { Status, ChessRules, TimeClass, GameResult };
