@@ -9,8 +9,7 @@ export default function UserLoggedInLayout({
 }) {
   return (
     <div className="flex h-screen flex-col">
-      <Navbar />
-      <div className="flex h-full w-full flex-row bg-cyan-400">
+      <div className="flex h-full w-full flex-row overflow-scroll overflow-x-hidden ">
         <Sidebar />
         <main>{children}</main>
       </div>

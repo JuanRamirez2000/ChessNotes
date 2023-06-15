@@ -68,11 +68,13 @@ export default function UserGamesTable() {
         );
         switch (result) {
           case "draw":
-            return <Bars2Icon className="h-6 w-6" />;
+            return <Bars2Icon className="h-8 w-8 rounded-lg bg-gray-400 p-2" />;
           case "won":
-            return <CheckIcon className="h-6 w-6" />;
+            return (
+              <CheckIcon className="h-8 w-8 rounded-lg bg-emerald-400 p-2" />
+            );
           case "lost":
-            return <XMarkIcon className="h-6 w-6" />;
+            return <XMarkIcon className="h-8 w-8 rounded-lg bg-rose-400 p-2" />;
         }
       },
       header: "result",
@@ -95,13 +97,13 @@ export default function UserGamesTable() {
   });
 
   return (
-    <div>
-      <table>
-        <thead>
+    <div className="overflow-hidden rounded-xl border shadow-lg">
+      <table className="text-md h-64 w-full table-auto text-left">
+        <thead className=" bg-cyan-400 text-sm uppercase">
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
+            <tr key={headerGroup.id} className="divide-x divide-gray-600">
               {headerGroup.headers.map((header) => (
-                <th key={header.id}>
+                <th key={header.id} className="px-8 py-2">
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -113,11 +115,11 @@ export default function UserGamesTable() {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-dashed divide-gray-300">
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
+                <td key={cell.id} className="px-8 py-2">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}

@@ -15,6 +15,10 @@ const Home: NextPage = () => {
 
   return (
     <>
+      {/* Hero Section*/}
+      <div className="flex h-screen w-screen items-center justify-center">
+        <h1>Chess Notes</h1>
+      </div>
       {user.user?.publicMetadata.chessUsername ? (
         <Link
           className="rounded-lg bg-emerald-400 px-4 py-2 font-bold"
