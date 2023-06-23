@@ -47,6 +47,11 @@ export default function UserGamesTable() {
     ],
   });
 
+  const mutation = api.chess.saveGamesToPlayer.useMutation();
+  const handleDownload = () => {
+    mutation.mutate();
+  };
+
   const tableData = useMemo(() => modifyTRPCQueryData(data), [data]);
 
   const columnHelper = createColumnHelper<UserQueriedGames>();
@@ -97,38 +102,50 @@ export default function UserGamesTable() {
   });
 
   return (
-    <div className="overflow-hidden rounded-xl border shadow-lg">
-      <table className="text-md h-64 w-full table-auto text-left">
-        <thead className=" bg-cyan-400 text-sm uppercase">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="divide-x divide-gray-600">
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} className="px-8 py-2">
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody className="divide-y divide-dashed divide-gray-300">
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="px-8 py-2">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div />
-    </div>
+    <>
+      <div className="flex w-full">
+        {/*!TODO - Implement a search feature for the games table*/}
+        <button
+          onClick={handleDownload}
+          className="text-md flex w-40 flex-row items-center justify-start gap-2 rounded-md border-b-8 border-b-cyan-900 bg-cyan-700 p-2 font-semibold text-cyan-100 active:border"
+        >
+          Update Games
+        </button>
+      </div>
+      {/*!TODO - Restrict height and do pagination*/}
+      <div className="overflow-hidden rounded-xl border shadow-lg">
+        <table className="text-md h-64 w-full table-auto text-left">
+          <thead className=" bg-cyan-400 text-sm uppercase">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id} className="divide-x divide-gray-600">
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id} className="px-8 py-2">
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody className="divide-y divide-dashed divide-gray-300">
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="px-8 py-2">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div />
+      </div>
+    </>
   );
 }
 

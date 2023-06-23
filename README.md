@@ -54,8 +54,15 @@ This project currently works under the t3 stack. For specifics
 - [x] Understand database management
 - [x] Understand how to query the database efficiently
 - [x] Query the Chess.com webapi
-- [ ] Restructure chess router to include user auth 
-- [ ] Handle games query when users are logged in
-- [ ] Display games as a list on the user home page
-- [ ] Understand NextJS dynamic routing
+- [x] Restructure chess router to include user auth 
+- [x] Handle games query when users are logged in
+- [x] Display games as a list on the user home page
+- [ ] Understand NextJS dynamic routing (for anlysis boards)
 - [ ] Create an "Analysis" that connects a notebook, chess game, and notes
+    - [ ] Create analysis types
+        - [ ] New Anlysis
+        - [ ] From a previous game (using games table)
+        - [x] From a FEN/PGN
+            - [x] Verifies validity of FEN and PGN
+    - [ ] Create notes section
+        - [ ] Notes must use markdown to edit them

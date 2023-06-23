@@ -1,5 +1,4 @@
 import Footer from "~/components/Footer";
-import Navbar from "~/components/Navbar";
 import Sidebar from "~/components/Sidebar";
 
 export default function UserLoggedInLayout({
@@ -11,7 +10,7 @@ export default function UserLoggedInLayout({
     <div className="flex h-screen flex-col">
       <div className="flex h-full w-full flex-row overflow-scroll overflow-x-hidden ">
         <Sidebar />
-        <main>{children}</main>
+        <main className="h-full w-full">{children}</main>
       </div>
       <Footer />
     </div>

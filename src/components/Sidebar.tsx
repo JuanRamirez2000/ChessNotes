@@ -34,14 +34,26 @@ export default function Sidebar() {
           <PuzzlePieceIcon className="h-6 w-6 rounded-lg" />
           <li>My games</li>
         </Link>
-        <div className="flex flex-row gap-2 py-2 pl-4 hover:cursor-pointer  hover:bg-cyan-800 hover:text-cyan-50">
+        <Link
+          className={`flex flex-row gap-2 py-2 pl-4 hover:cursor-pointer hover:bg-cyan-800 hover:text-cyan-50 ${
+            router.pathname === "/notes" ? "border-r-8 border-cyan-700" : ""
+          }`}
+          href={"/notes"}
+        >
           <PencilSquareIcon className="h-6 w-6 rounded-lg" />
           <li>My Notes</li>
-        </div>
-        <div className="flex flex-row gap-2 py-2 pl-4 hover:cursor-pointer  hover:bg-cyan-800 hover:text-cyan-50">
+        </Link>
+        <Link
+          className={`flex flex-row gap-2 py-2 pl-4 hover:cursor-pointer hover:bg-cyan-800 hover:text-cyan-50 ${
+            router.pathname === "/new-analysis"
+              ? "border-r-8 border-cyan-700"
+              : ""
+          }`}
+          href={"/new-analysis"}
+        >
           <PlusCircleIcon className="h-6 w-6 rounded-lg" />
           <li>New Analysis</li>
-        </div>
+        </Link>
       </ul>
     </div>
   );
