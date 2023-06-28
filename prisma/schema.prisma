@@ -28,7 +28,7 @@ model ChessUserProfile {
 }
 
 model ChessNotebook {
-    id        Int           @id @default(autoincrement())
+    id        String        @id @default(uuid())
     createdAt DateTime      @default(now())
     updatedAt DateTime      @updatedAt
     title     String?
@@ -55,7 +55,7 @@ model ChessComGame {
     players       ChessComPlayersInGame[]
 
     notebook   ChessNotebook? @relation(fields: [notebookId], references: [id])
-    notebookId Int?           @unique
+    notebookId String?        @unique
 
     @@index([url])
 }

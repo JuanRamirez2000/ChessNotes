@@ -9,12 +9,15 @@ import UserLoggedInLayout from "~/layouts/UserLoggedInLayout";
 import ChessBoardComponent from "~/features/ChessBoard/ChessBoard";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import UserGamesTable from "~/features/userGamesTable/UserGamesTable";
+import { api } from "~/utils/api";
 
 type GameFormInput = {
   gameString: string;
 };
 
 const NewAnalysis: NextPageWithLayout = () => {
+  const mutation = api.analysis.createNewAnalysisWithoutInput.useMutation();
+
   const [showGameHistory, setShowGameHistory] = useState<boolean>(false);
   const [enablePositionInput, setEnablePositionInput] =
     useState<boolean>(false);
@@ -31,7 +34,12 @@ const NewAnalysis: NextPageWithLayout = () => {
         <h1 className="text-4xl font-bold">New analysis method</h1>
         <ul className="flex flex-col gap-2 text-cyan-100">
           <li>
-            <button className="flex h-14 w-60 cursor-pointer flex-row items-center justify-start gap-2 rounded-lg border-b-8 border-b-gray-950 bg-gray-800 active:border-b">
+            <button
+              className="flex h-14 w-60 cursor-pointer flex-row items-center justify-start gap-2 rounded-lg border-b-8 border-b-gray-950 bg-gray-800 active:border-b"
+              onClick={() => {
+                mutation.mutate();
+              }}
+            >
               <FolderPlusIcon className="ml-2 h-9 w-9 rounded-lg" />
               <h2 className="text-xl font-semibold">New Game</h2>
             </button>

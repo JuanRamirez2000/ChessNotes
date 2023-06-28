@@ -14,18 +14,19 @@ The app is made around the chess.com web-api, however support for LiChess is und
 
 - Phase 1
     Revolved around getting the basic groundwork for an individual to annotate their previous games
-    - User authentication
-    - Chess notes and annotations
+    - [x] User authentication
+    - [ ] Chess notes and annotations
+    - [ ] UI Overhaul
 
 - Phase 2
-    - Theory annotation
-    - Opening/Endgame anlysis
-    - Notes Sharing
+    - [ ] Theory annotation
+    - [ ] Opening/Endgame anlysis
+    - [ ] Notes Sharing
 
 - Phase 3
-    - Collaborative notes
-    - Chess studies
-    - Notes sharing
+    - [ ] Collaborative notes
+    - [ ] Chess studies
+    - [ ] Notes sharing
 
 ## The Stack
 
