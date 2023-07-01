@@ -58,12 +58,33 @@ This project currently works under the t3 stack. For specifics
 - [x] Restructure chess router to include user auth 
 - [x] Handle games query when users are logged in
 - [x] Display games as a list on the user home page
-- [ ] Understand NextJS dynamic routing (for anlysis boards)
+- [x] Understand NextJS dynamic routing (for anlysis boards)
 - [ ] Create an "Analysis" that connects a notebook, chess game, and notes
     - [ ] Create analysis types
-        - [ ] New Anlysis
+        - [x] New Anlysis
         - [ ] From a previous game (using games table)
         - [x] From a FEN/PGN
             - [x] Verifies validity of FEN and PGN
     - [ ] Create notes section
         - [ ] Notes must use markdown to edit them
+        - [ ] Notes view must have a chessboard and current notes
+
+## What Needs to be done before Phase 1 release
+- [x] Basic user auth and management
+- [x] User search for Chess.com
+- [ ] Analysis creation and editing
+    - [x] Creating analysis
+    - [ ] Editing analysis
+    - [ ] Deleting analysis
+- [ ] API endpoints
+    - [x] Creating a new analysis
+    - [x] Signing up user with Clerk and Chess.com
+    - [x] Downloading most recent games from Chess.com
+    - [x] Fetchtching all analysis from user
+    - [ ] Editing an analysis
+    - [ ] Deleting analysis 
+        - [ ] Modal to confirm deletion
+- [ ] UI overhaul 
+- [ ] Refactoring (making sure names are consistent between front and backend)
+- [ ] Testing 
+    - [ ] Choosing a testing framework

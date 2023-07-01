@@ -10,22 +10,53 @@ import ChessBoardComponent from "~/features/ChessBoard/ChessBoard";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import UserGamesTable from "~/features/userGamesTable/UserGamesTable";
 import { api } from "~/utils/api";
+import { useRouter } from "next/router";
+import { ErrorMessage } from "@hookform/error-message";
+import { ValidateGameFENorPGN } from "~/helpers/validateFENOrPGN";
+import { toast } from "react-toastify";
 
 type GameFormInput = {
-  gameString: string;
+  notesTitle: string;
+  gameFENorPGN: string;
 };
 
+const STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
 const NewAnalysis: NextPageWithLayout = () => {
-  const mutation = api.analysis.createNewAnalysisWithoutInput.useMutation();
+  const router = useRouter();
+  const mutation = api.analysis.createNewAnalysis.useMutation({
+    onSuccess: async (data) => {
+      toast.success("Analysis Created!");
+      if (data) {
+        await router.push(`/notes/${data.id}`);
+      }
+    },
+    onError: () => {
+      toast.error("Failed Creating Analysis");
+    },
+  });
 
   const [showGameHistory, setShowGameHistory] = useState<boolean>(false);
   const [enablePositionInput, setEnablePositionInput] =
     useState<boolean>(false);
-  const [startingPosition, setStartingPosition] = useState<string>("");
-  const { register, handleSubmit } = useForm<GameFormInput>();
+  const {
+    register: register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<GameFormInput>({
+    defaultValues: {
+      gameFENorPGN: STARTING_FEN,
+    },
+  });
+
+  const watchGameString = watch("gameFENorPGN", STARTING_FEN);
 
   const handleGameInputSubmit: SubmitHandler<GameFormInput> = (data) => {
-    setStartingPosition(data.gameString);
+    mutation.mutate({
+      analysisTitle: data.notesTitle,
+      gameString: data.gameFENorPGN,
+    });
   };
 
   return (
@@ -37,11 +68,11 @@ const NewAnalysis: NextPageWithLayout = () => {
             <button
               className="flex h-14 w-60 cursor-pointer flex-row items-center justify-start gap-2 rounded-lg border-b-8 border-b-gray-950 bg-gray-800 active:border-b"
               onClick={() => {
-                mutation.mutate();
+                mutation.mutate({ analysisTitle: "New Analysis" });
               }}
             >
               <FolderPlusIcon className="ml-2 h-9 w-9 rounded-lg" />
-              <h2 className="text-xl font-semibold">New Game</h2>
+              <p className="text-xl font-semibold">New Game</p>
             </button>
           </li>
           <li>
@@ -53,7 +84,7 @@ const NewAnalysis: NextPageWithLayout = () => {
               }}
             >
               <ArchiveBoxArrowDownIcon className="ml-2 h-9 w-9 rounded-lg" />
-              <h2 className="text-xl font-semibold">Previous Game</h2>
+              <p className="text-xl font-semibold">Previous Game</p>
             </button>
           </li>
           <li>
@@ -65,26 +96,65 @@ const NewAnalysis: NextPageWithLayout = () => {
               }}
             >
               <ArrowDownTrayIcon className="ml-2 h-9 w-9 rounded-lg" />
-              <h2 className="text-xl font-semibold">Import PGN/FEN</h2>
+              <p className="text-xl font-semibold">Import PGN/FEN</p>
             </button>
           </li>
         </ul>
-        {enablePositionInput && (
-          <form onSubmit={handleSubmit(handleGameInputSubmit)}>
+
+        {showGameHistory && <UserGamesTable />}
+      </div>
+      <div className="flex h-fit w-2/3 max-w-fit flex-col">
+        <form className="flex w-full flex-row" key={"RegisterGame"}>
+          <div className="relative grow">
+            <input
+              type="text"
+              className="peer h-14 w-full rounded-md border-2 border-cyan-400 p-3 pt-4 placeholder-transparent caret-transparent focus:border-cyan-600 focus:shadow-sm focus:outline-none"
+              placeholder="Magnus Carlson"
+              {...register("notesTitle", {
+                required: "Title is required",
+              })}
+            />
+            <label
+              htmlFor="analysisTitle"
+              className="pointer-events-none absolute left-0 top-0 origin-left -translate-y-4 translate-x-0 scale-75 px-3 py-5 text-sm tracking-tight opacity-100 transition-all duration-100 ease-in-out 
+              
+              peer-placeholder-shown:-translate-y-0 peer-placeholder-shown:translate-x-1 peer-placeholder-shown:scale-125
+              
+              peer-focus:-translate-y-4 peer-focus:translate-x-0 "
+            >
+              Title
+            </label>
+          </div>
+          <button
+            className="flex h-14 w-60 cursor-pointer flex-row items-center justify-start gap-2 rounded-lg border-b-8 border-b-gray-950 bg-gray-800 text-cyan-100 active:border-b"
+            onClick={handleSubmit(handleGameInputSubmit)}
+          >
+            <ArrowDownTrayIcon className="ml-2 h-9 w-9 rounded-lg" />
+            <p className="text-xl font-semibold">Save</p>
+          </button>
+          {enablePositionInput && (
             <textarea
               cols={30}
               rows={10}
               className="rounded-md border-2 border-cyan-400 outline-none focus:border-cyan-700"
               placeholder="Import a PGN or FEN"
-              {...register("gameString")}
+              {...register("gameFENorPGN", {
+                validate: {
+                  validFENofPGN: (gameString) => {
+                    const res = ValidateGameFENorPGN(gameString);
+                    if (res.validated) {
+                      return res.validated;
+                    }
+                    return "Invalid FEN or PGN";
+                  },
+                },
+              })}
             ></textarea>
-            <button type={"submit"}>Submit</button>
-          </form>
-        )}
-        {showGameHistory && <UserGamesTable />}
-      </div>
-      <div className="flex h-fit w-2/3  justify-center">
-        <ChessBoardComponent startingPosition={startingPosition} />
+          )}
+          <ErrorMessage errors={errors} name="notesTitle" />
+          <ErrorMessage errors={errors} name="gameFENorPGN" />
+        </form>
+        <ChessBoardComponent startingPosition={watchGameString} />
       </div>
     </div>
   );

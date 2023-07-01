@@ -19,10 +19,8 @@ model ChessUserProfile {
     fide      Int?
     rating    Int?
 
-    //userPlayerProfile ChessComPlayer?
     userNotebooks ChessNotebook[]
     games         ChessComPlayersInGame[]
-    //userGames         ChessComGame[]
 
     @@index([username])
 }
@@ -33,6 +31,7 @@ model ChessNotebook {
     updatedAt DateTime      @updatedAt
     title     String?
     notes     String?
+    position  String?       @db.Text
     gameId    ChessComGame?
 
     notebookAuthor ChessUserProfile @relation(fields: [authorUsername], references: [username])

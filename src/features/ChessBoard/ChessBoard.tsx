@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Chessboard } from "react-chessboard";
-import { Chess, PieceSymbol, validateFen } from "chess.js";
+import { Chess, type PieceSymbol } from "chess.js";
 import type { Piece, Square } from "react-chessboard/dist/chessboard/types";
 import { ArrowPathIcon, ArrowsUpDownIcon } from "@heroicons/react/24/outline";
+import { ValidateGameFENorPGN } from "~/helpers/validateFENOrPGN";
 type move =
   | string
   | {
@@ -11,57 +12,26 @@ type move =
       promotion?: string | undefined;
     };
 
-interface PositionValidation {
-  validated: boolean;
-  gameString: string;
-  inputType: "pgn" | "fen" | "error";
-}
-
-const validateStartingInput = (gameString: string): PositionValidation => {
-  const validation = validateFen(gameString);
-  if (validation.ok) {
-    return {
-      validated: true,
-      gameString: gameString,
-      inputType: "fen",
-    };
-  }
-
-  //Will only check PGN if FEN string failed
-  //Chekcing by loading to a new chess object
-  try {
-    const chess = new Chess();
-    chess.loadPgn(gameString, { newlineChar: "\n" });
-    return {
-      validated: true,
-      gameString: gameString,
-      inputType: "pgn",
-    };
-  } catch (error) {
-    console.error("Error validating game string");
-    return {
-      validated: false,
-      gameString: gameString,
-      inputType: "pgn",
-    };
-  }
-};
+const STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 export default function ChessBoardComponent({
-  startingPosition,
+  startingPosition = STARTING_FEN,
+  chessBoardWidth = 600,
 }: {
-  startingPosition: string;
+  startingPosition?: string;
+  chessBoardWidth?: number;
 }) {
   //* ChessGameConfiguration
   const [game, setGame] = useState<Chess>(new Chess());
   const [boardOrientationControl, setBoardOrientationControl] = useState<
     "white" | "black"
   >("white");
-  const [moveOptions, setMoveOptions] = useState({});
+  //const [moveOptions, setMoveOptions] = useState({});
 
   useEffect(() => {
-    const { validated, gameString, inputType } =
-      validateStartingInput(startingPosition);
+    const { validated, gameString, inputType } = ValidateGameFENorPGN(
+      startingPosition ? startingPosition : STARTING_FEN
+    );
     if (validated) {
       if (inputType === "fen") {
         setGame(new Chess(gameString));
@@ -115,7 +85,7 @@ export default function ChessBoardComponent({
           boardOrientation={boardOrientationControl}
           customDarkSquareStyle={{ backgroundColor: "#0e7490" }}
           customLightSquareStyle={{ backgroundColor: "#edeed1" }}
-          boardWidth={600}
+          boardWidth={chessBoardWidth}
         />
       </div>
       <div className="mt-1 flex flex-row justify-between">
