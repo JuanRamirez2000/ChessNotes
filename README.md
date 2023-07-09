@@ -75,14 +75,14 @@ This project currently works under the t3 stack. For specifics
 - [ ] Analysis creation and editing
     - [x] Creating analysis
     - [ ] Editing analysis
-    - [ ] Deleting analysis
+    - [x] Deleting analysis
 - [ ] API endpoints
     - [x] Creating a new analysis
     - [x] Signing up user with Clerk and Chess.com
     - [x] Downloading most recent games from Chess.com
     - [x] Fetchtching all analysis from user
     - [ ] Editing an analysis
-    - [ ] Deleting analysis 
+    - [x] Deleting analysis 
         - [ ] Modal to confirm deletion
 - [ ] UI overhaul 
 - [ ] Refactoring (making sure names are consistent between front and backend)

@@ -5,14 +5,18 @@
 await import("./src/env.mjs");
 
 import NextBundleAnalyzer from "@next/bundle-analyzer";
+import removeImports from "next-remove-imports";
 
 const withBundleAnalyzer = NextBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
   openAnalyzer: false
 })
 
+
+const withRemoveImports = removeImports()
+
 /** @type {import("next").NextConfig} */
-const config = withBundleAnalyzer({
+const config = withRemoveImports({
   reactStrictMode: true,
 
   /**

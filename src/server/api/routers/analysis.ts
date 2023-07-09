@@ -53,7 +53,6 @@ export const analysisRouter = createTRPCRouter({
       console.error(error);
     }
   }),
-
   grabSingleAnalysisNotebook: protectedProcedure
     .input(
       z.object({
@@ -68,6 +67,23 @@ export const analysisRouter = createTRPCRouter({
           },
         });
         return notebook;
+      } catch (error) {
+        console.error(error);
+      }
+    }),
+  deleteAnalysisNotebook: protectedProcedure
+    .input(
+      z.object({
+        notebookID: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.chessNotebook.delete({
+          where: {
+            id: input.notebookID,
+          },
+        });
       } catch (error) {
         console.error(error);
       }

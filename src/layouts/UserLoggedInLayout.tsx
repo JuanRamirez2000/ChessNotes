@@ -1,5 +1,5 @@
-import Footer from "~/components/Footer";
-import Sidebar from "~/components/Sidebar";
+import Footer from "~/components/layoutSections/Footer";
+import Sidebar from "~/components/layoutSections/Sidebar";
 
 export default function UserLoggedInLayout({
   children,
@@ -12,7 +12,6 @@ export default function UserLoggedInLayout({
         <Sidebar />
         <main className="h-full w-full">{children}</main>
       </div>
-      <Footer />
     </div>
   );
 }

@@ -5,7 +5,6 @@ import AnalysisCard from "~/components/AnalysisCard";
 
 const Notes: NextPageWithLayout = () => {
   const { data } = api.analysis.grabAllAnalysisNotes.useQuery();
-  console.log(data);
   return (
     <div className="flex flex-row flex-wrap gap-6">
       {data?.map((notebook) => (

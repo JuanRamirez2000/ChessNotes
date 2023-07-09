@@ -4,6 +4,7 @@ import { Chess, type PieceSymbol } from "chess.js";
 import type { Piece, Square } from "react-chessboard/dist/chessboard/types";
 import { ArrowPathIcon, ArrowsUpDownIcon } from "@heroicons/react/24/outline";
 import { ValidateGameFENorPGN } from "~/helpers/validateFENOrPGN";
+import { parse } from "@mliebelt/pgn-parser";
 type move =
   | string
   | {
@@ -57,6 +58,8 @@ export default function ChessBoardComponent({
     gameCopy.loadPgn(game.pgn());
     gameCopy.move(move);
     setGame(gameCopy);
+    const parsedGame = parse(gameCopy.pgn(), { startRule: "game" });
+    console.log(parsedGame);
   };
 
   const onDrop = (
@@ -74,6 +77,9 @@ export default function ChessBoardComponent({
     return true;
   };
 
+  //! TODO - Add a PGN/FEN viewer
+  //  This should display the full PGN on the side
+  //  Or a FEN String and the pgn afterwards
   return (
     <div className="max-h-fit min-h-min min-w-min max-w-fit">
       <div className="bg-cyan-950 p-2">

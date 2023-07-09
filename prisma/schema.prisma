@@ -69,6 +69,18 @@ model ChessComPlayersInGame {
     @@index([playerId])
 }
 
+model FeatureLikes {
+    featureTableID  Int @unique @default(1)
+    moveAnnotations Int
+    lineAnalysis    Int
+    engineView      Int
+    graphView       Int
+    privateNotes    Int
+    publicNotes     Int
+
+    @@index([moveAnnotations, lineAnalysis, engineView, graphView, privateNotes, publicNotes])
+}
+
 //model ChessPlayerAccuracies {
 //    id     String        @id
 //    black  Float?

@@ -12,6 +12,7 @@ import type { AppRouter } from "~/server/api/root";
 import { useUser } from "@clerk/clerk-react";
 import Link from "next/link";
 import { CheckIcon, XMarkIcon, Bars2Icon } from "@heroicons/react/24/outline";
+import { toast } from "react-toastify";
 type ChessRouterOutput = inferRouterOutputs<AppRouter>;
 type tRPCQueryGames = ChessRouterOutput["chess"]["getGamesFromChessUser"];
 
@@ -46,8 +47,13 @@ export default function UserGamesTable() {
       },
     ],
   });
-
-  const mutation = api.chess.saveGamesToPlayer.useMutation();
+  const utils = api.useContext();
+  const mutation = api.chess.saveGamesToPlayer.useMutation({
+    onSuccess: async () => {
+      toast.success("Downloaded games from Chess.com!");
+      await utils.chess.getGamesFromChessUser.invalidate();
+    },
+  });
   const handleDownload = () => {
     mutation.mutate();
   };
