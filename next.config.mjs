@@ -16,7 +16,7 @@ const withBundleAnalyzer = NextBundleAnalyzer({
 const withRemoveImports = removeImports()
 
 /** @type {import("next").NextConfig} */
-const config = withRemoveImports({
+const config = withBundleAnalyzer(withRemoveImports({
   reactStrictMode: true,
 
   /**
@@ -32,5 +32,5 @@ const config = withRemoveImports({
   images: {
     domains: ['images.chesscomfiles.com']
   }
-});
+}));
 export default config;

@@ -67,7 +67,7 @@ This project currently works under the t3 stack. For specifics
             - [x] Verifies validity of FEN and PGN
     - [ ] Create notes section
         - [ ] Notes must use markdown to edit them
-        - [ ] Notes view must have a chessboard and current notes
+        - [x] Notes view must have a chessboard and current notes
 
 ## What Needs to be done before Phase 1 release
 - [x] Basic user auth and management
@@ -83,8 +83,8 @@ This project currently works under the t3 stack. For specifics
     - [x] Fetchtching all analysis from user
     - [ ] Editing an analysis
     - [x] Deleting analysis 
-        - [ ] Modal to confirm deletion
+        - [x] Modal to confirm deletion
 - [ ] UI overhaul 
-- [ ] Refactoring (making sure names are consistent between front and backend)
+- [x] Refactoring (making sure names are consistent between front and backend)
 - [ ] Testing 
     - [ ] Choosing a testing framework

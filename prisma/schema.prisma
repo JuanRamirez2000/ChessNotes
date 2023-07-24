@@ -25,32 +25,16 @@ model ChessUserProfile {
     @@index([username])
 }
 
-model ChessNotebook {
-    id        String        @id @default(uuid())
-    createdAt DateTime      @default(now())
-    updatedAt DateTime      @updatedAt
-    title     String?
-    notes     String?
-    position  String?       @db.Text
-    gameId    ChessComGame?
-
-    notebookAuthor ChessUserProfile @relation(fields: [authorUsername], references: [username])
-    authorUsername String
-
-    @@index([authorUsername])
-}
-
 model ChessComGame {
     url           String                  @id
     fen           String?
-    pgn           String?                 @db.Text
+    pgn           String                  @db.Text
     rated         Boolean?
     timeClass     String?
-    timeControl   String?
+    timeControl   String
     gameResult    String?
     whiteUsername String?
     blackUsername String?
-    //playerAccuracies ChessPlayerAccuracies?
     players       ChessComPlayersInGame[]
 
     notebook   ChessNotebook? @relation(fields: [notebookId], references: [id])
@@ -67,25 +51,20 @@ model ChessComPlayersInGame {
 
     @@id([gameId, playerId])
     @@index([playerId])
+    @@index([gameId])
 }
 
-model FeatureLikes {
-    featureTableID  Int @unique @default(1)
-    moveAnnotations Int
-    lineAnalysis    Int
-    engineView      Int
-    graphView       Int
-    privateNotes    Int
-    publicNotes     Int
+model ChessNotebook {
+    id        String        @id @default(uuid())
+    createdAt DateTime      @default(now())
+    updatedAt DateTime      @updatedAt
+    title     String?
+    notes     String?
+    position  String?       @db.Text
+    gameId    ChessComGame?
 
-    @@index([moveAnnotations, lineAnalysis, engineView, graphView, privateNotes, publicNotes])
+    notebookAuthor ChessUserProfile @relation(fields: [authorUsername], references: [username])
+    authorUsername String
+
+    @@index([authorUsername])
 }
-
-//model ChessPlayerAccuracies {
-//    id     String        @id
-//    black  Float?
-//    white  Float?
-//    gameID ChessComGame? @relation(fields: [id], references: [url])
-//
-//    @@index([id])
-//}

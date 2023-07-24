@@ -64,19 +64,8 @@ export const chessRouter = createTRPCRouter({
           ...game,
         })
       );
-
       if (userGames) {
-        //!This is a current bug. Chess Rating doesnt reflect the most
-        //most current rating...I shall fix this later
-        //this also doesnt differentiate between bullet/blitz/rapid
-        //this will also be fixed later....
-
-        let chessRating = 0;
         renamedGames?.map(async (game) => {
-          chessUsername === game.white.username
-            ? (chessRating = game.white.rating)
-            : (chessRating = game.white.rating);
-
           let gameResult = "";
           switch (game.white.result) {
             case "win":
@@ -100,12 +89,6 @@ export const chessRouter = createTRPCRouter({
           }
           await ctx.prisma.chessComGame.create({
             data: {
-              //playerAccuracies: {
-              //  create: {
-              //    black: game.accuracies.black,
-              //    white: game.accuracies.white,
-              //  },
-              //},
               players: {
                 create: [
                   {
@@ -143,14 +126,6 @@ export const chessRouter = createTRPCRouter({
               gameResult: gameResult,
             },
           });
-        });
-        await ctx.prisma.chessUserProfile.update({
-          where: {
-            username: chessUsername,
-          },
-          data: {
-            rating: chessRating,
-          },
         });
       }
     } catch (error) {
