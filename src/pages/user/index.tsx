@@ -1,8 +1,13 @@
 import UserLoggedInLayout from "~/layouts/UserLoggedInLayout";
 import type { NextPageWithLayout } from "../_app";
+import UserNotesTable from "~/features/Notes/UserNotesTable";
 
 const User: NextPageWithLayout = () => {
-  return <></>;
+  return (
+    <>
+      <UserNotesTable />
+    </>
+  );
 };
 
 User.getLayout = function getLayout(page: React.ReactElement) {

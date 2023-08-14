@@ -15,7 +15,7 @@ The app is made around the chess.com web-api, however support for LiChess is und
 - Phase 1
     Revolved around getting the basic groundwork for an individual to annotate their previous games
     - [x] User authentication
-    - [ ] Chess notes and annotations
+    - [x] Chess notes and annotations
     - [ ] UI Overhaul
 
 - Phase 2
@@ -36,6 +36,7 @@ This project currently works under the t3 stack. For specifics
 
 - ReactJS + TypescriptJS
 - TailwindCSS
+- DaisyUI
 
 
 ### Backend tech
@@ -48,6 +49,23 @@ This project currently works under the t3 stack. For specifics
 
 - Vercel
 - PlanetScale
+
+### Misc
+- ChessJS
+- React-ChessBoard
+- Tanstack Table
+- React Markdown Editor
+
+### Colors Used
+Colors are based on [TailwindCSS Colors](https://tailwindcss.com/docs/customizing-colors)
+With these colors in mind:
+
+ - Primary Color
+    - Emerald
+ - Accent Colors
+    - Cyan, Rose, Amber
+ - Background Colors
+    - Slate
 
 ## Current plans
 
@@ -74,8 +92,11 @@ This project currently works under the t3 stack. For specifics
 - [x] User search for Chess.com
 - [ ] Analysis creation and editing
     - [x] Creating analysis
+        - [ ] Creating analysis from position on the right is not currently working.
+        - [ ] Restructuring of creating analysis
     - [ ] Editing analysis
     - [x] Deleting analysis
+- [ ] Changing up table for games preview
 - [ ] API endpoints
     - [x] Creating a new analysis
     - [x] Signing up user with Clerk and Chess.com

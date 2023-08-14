@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { clerkClient } from "@clerk/nextjs";
 import { grabUsersMonthlyGames } from "~/helpers/grabUsersMonthlyGames";
+import { TRPCError } from "@trpc/server";
 
 export const chessRouter = createTRPCRouter({
   savePlayerToPrisma: protectedProcedure
@@ -31,7 +32,11 @@ export const chessRouter = createTRPCRouter({
           },
         });
       } catch (error) {
-        console.error(error);
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "An unexpected event occured, please try again",
+          cause: error,
+        });
       }
     }),
 
@@ -43,11 +48,19 @@ export const chessRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-      await clerkClient.users.updateUser(ctx.auth.userId!, {
-        publicMetadata: {
-          chessUsername: input.chessUsername,
-        },
-      });
+      try {
+        await clerkClient.users.updateUser(ctx.auth.userId!, {
+          publicMetadata: {
+            chessUsername: input.chessUsername,
+          },
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "An unexpected event occured, please try again",
+          cause: error,
+        });
+      }
     }),
   saveGamesToPlayer: protectedProcedure.mutation(async ({ ctx }) => {
     try {
@@ -129,7 +142,11 @@ export const chessRouter = createTRPCRouter({
         });
       }
     } catch (error) {
-      console.error(error);
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "An unexpected event occured, please try again",
+        cause: error,
+      });
     }
   }),
   getGamesFromChessUser: protectedProcedure.query(async ({ ctx }) => {
@@ -166,7 +183,11 @@ export const chessRouter = createTRPCRouter({
         return games;
       }
     } catch (error) {
-      console.error(error);
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "An unexpected event occured, please try again",
+        cause: error,
+      });
     }
   }),
 });

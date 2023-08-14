@@ -8,7 +8,7 @@ import { useState } from "react";
 import UserLoggedInLayout from "~/layouts/UserLoggedInLayout";
 import ChessBoardComponent from "~/features/ChessBoard/ChessBoard";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import UserGamesTable from "~/features/userGamesTable/UserGamesTable";
+import UserGamesTable from "~/features/UserGamesTable/UserGamesTable";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import { ErrorMessage } from "@hookform/error-message";

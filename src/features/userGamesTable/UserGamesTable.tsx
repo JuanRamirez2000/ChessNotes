@@ -6,16 +6,13 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/utils/api";
 import { useMemo } from "react";
-import type { inferRouterOutputs } from "@trpc/server";
-import type { AppRouter } from "~/server/api/root";
 import { useUser } from "@clerk/clerk-react";
 import Link from "next/link";
 import { CheckIcon, XMarkIcon, Bars2Icon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
-type ChessRouterOutput = inferRouterOutputs<AppRouter>;
-type tRPCQueryGames = ChessRouterOutput["chess"]["getGamesFromChessUser"];
+type ReactQueryGames = RouterOutputs["chess"]["getGamesFromChessUser"];
 
 type UserQueriedGames = {
   url: string;
@@ -230,7 +227,7 @@ const determineGameResult = (
 };
 
 const modifyTRPCQueryData = (
-  trpcData: tRPCQueryGames
+  trpcData: ReactQueryGames
 ): UserQueriedGames[] | undefined => {
   if (trpcData) {
     const modifiedGamesData = trpcData.map(({ players: _, ...game }) => ({

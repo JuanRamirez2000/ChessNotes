@@ -1,4 +1,4 @@
-import UserGamesTable from "~/features/userGamesTable/UserGamesTable";
+import UserGamesTable from "~/features/UserGamesTable/UserGamesTable";
 import type { NextPageWithLayout } from "../_app";
 import UserLoggedInLayout from "~/layouts/UserLoggedInLayout";
 

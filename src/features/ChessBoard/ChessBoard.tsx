@@ -5,6 +5,7 @@ import type { Piece, Square } from "react-chessboard/dist/chessboard/types";
 import { ArrowPathIcon, ArrowsUpDownIcon } from "@heroicons/react/24/outline";
 import { ValidateGameFENorPGN } from "~/helpers/validateFENOrPGN";
 import { parse } from "@mliebelt/pgn-parser";
+import PGNView from "./PGNView";
 type move =
   | string
   | {
@@ -19,7 +20,7 @@ export default function ChessBoardComponent({
   startingPosition = STARTING_FEN,
   chessBoardWidth = 600,
 }: {
-  startingPosition?: string;
+  startingPosition?: string | null;
   chessBoardWidth?: number;
 }) {
   //* ChessGameConfiguration
@@ -82,28 +83,29 @@ export default function ChessBoardComponent({
   //  Or a FEN String and the pgn afterwards
   return (
     <div className="max-h-fit min-h-min min-w-min max-w-fit">
-      <div className="bg-cyan-950 p-2">
+      <div className="bg-emerald-950 p-2">
         <Chessboard
           position={game.fen()}
           onPieceDrop={onDrop}
           onPieceClick={getMoveOptions}
           showBoardNotation={true}
           boardOrientation={boardOrientationControl}
-          customDarkSquareStyle={{ backgroundColor: "#0e7490" }}
-          customLightSquareStyle={{ backgroundColor: "#edeed1" }}
+          customDarkSquareStyle={{ backgroundColor: "#059669" }}
+          customLightSquareStyle={{ backgroundColor: "#f8fafc" }}
           boardWidth={chessBoardWidth}
         />
+        {/* <PGNView pgn={game.pgn()} /> */}
       </div>
       <div className="mt-1 flex flex-row justify-between">
         <button
-          className="text-md flex w-40 flex-row items-center justify-start gap-2 rounded-md border-b-8 border-b-cyan-900 bg-cyan-700 p-2 font-semibold text-cyan-100 active:border-b"
+          className="text-md flex w-40 flex-row items-center justify-start gap-2 rounded-md border-b-8 border-b-emerald-900 bg-emerald-400 p-2 font-semibold text-zinc-50 transition hover:scale-105 hover:cursor-pointer active:border-b"
           onClick={() => setGame(new Chess())}
         >
           <ArrowPathIcon className="ml-1 h-6 w-6" />
           <p>Reset</p>
         </button>
         <button
-          className="text-md flex w-40 flex-row items-center justify-start gap-2 rounded-md border-b-8 border-b-cyan-900 bg-cyan-700 p-2 font-semibold text-cyan-100 active:border-b"
+          className="text-md flex w-40 flex-row items-center justify-start gap-2 rounded-md border-b-8 border-b-emerald-900 bg-emerald-400 p-2 font-semibold text-zinc-50 transition hover:scale-105 hover:cursor-pointer active:border-b"
           onClick={() =>
             setBoardOrientationControl((prev) =>
               prev === "white" ? "black" : "white"

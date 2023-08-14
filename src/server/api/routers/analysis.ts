@@ -1,5 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { clerkClient } from "@clerk/nextjs";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 export const analysisRouter = createTRPCRouter({
@@ -46,11 +47,14 @@ export const analysisRouter = createTRPCRouter({
           },
         },
       });
-      if (userNotes) {
-        return userNotes;
-      }
+
+      return userNotes;
     } catch (error) {
-      console.error(error);
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "An unexpected event occured, please try again",
+        cause: error,
+      });
     }
   }),
   grabSingleAnalysisNotebook: protectedProcedure
@@ -68,7 +72,11 @@ export const analysisRouter = createTRPCRouter({
         });
         return notebook;
       } catch (error) {
-        console.error(error);
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "An unexpected event occured, please try again",
+          cause: error,
+        });
       }
     }),
   deleteAnalysisNotebook: protectedProcedure
@@ -85,7 +93,38 @@ export const analysisRouter = createTRPCRouter({
           },
         });
       } catch (error) {
-        console.error(error);
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "An unexpected event occured, please try again",
+          cause: error,
+        });
+      }
+    }),
+  editAnalysisNotebook: protectedProcedure
+    .input(
+      z.object({
+        notebookID: z.string(),
+        notebookTitle: z.string(),
+        notebookNotes: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.chessNotebook.update({
+          where: {
+            id: input.notebookID,
+          },
+          data: {
+            title: input.notebookTitle,
+            notes: input.notebookNotes,
+          },
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "An unexpected event occured, please try again",
+          cause: error,
+        });
       }
     }),
 });

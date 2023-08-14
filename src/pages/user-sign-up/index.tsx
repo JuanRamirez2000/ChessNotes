@@ -74,7 +74,7 @@ export default function UserSignuUp() {
 
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
-      <div className="w-full max-w-lg flex-none rounded-lg p-10 tracking-wide shadow-lg">
+      <div className="w-full max-w-lg flex-none rounded-lg bg-slate-800 p-10 tracking-wide shadow-lg">
         <div className="relative h-52 w-full ">
           <Image
             src={"/assets/images/chessBackground1.jpg"}
@@ -86,13 +86,13 @@ export default function UserSignuUp() {
         <h2 className="my-2 text-2xl">Connect an account</h2>
         <p className="text-md">
           All we ever store is your username! Everything else is brought by
-          whatever chess platform you use!
+          Chess.com!
         </p>
         <form onSubmit={handleSubmit(onSubmit)} className="my-4">
           <div className="relative my-4">
             <input
               type="text"
-              className="peer h-16 w-full rounded-md border-2 p-3 pt-4 placeholder-transparent caret-transparent focus:border-cyan-300 focus:shadow-sm focus:outline-none"
+              className="peer h-16 w-full rounded-md border-2 bg-slate-500 p-3 pt-4 placeholder-transparent caret-transparent focus:border-emerald-300 focus:shadow-sm focus:outline-none"
               {...register("chessUsername", { required: true })}
               placeholder="Magnus Carlson"
             />
@@ -104,7 +104,7 @@ export default function UserSignuUp() {
               
               peer-focus:-translate-y-4 peer-focus:translate-x-0 "
             >
-              Chess Username
+              Chess.com Username
             </label>
             <Image
               src="/assets/svgs/chessKing.svg"
@@ -117,19 +117,11 @@ export default function UserSignuUp() {
           <div className="flex items-end justify-between">
             <button
               type="submit"
-              className="rounded-lg bg-cyan-300 px-2 py-2 hover:bg-cyan-400"
+              className="rounded-lg bg-emerald-400 px-2 py-2 hover:bg-emerald-500"
             >
               Find Account
               <MagnifyingGlassIcon className="ml-2 inline h-5 w-5" />
             </button>
-            <div className="flex gap-2">
-              <span className="rounded-xl bg-teal-400 px-2 py-1 text-sm hover:cursor-pointer hover:bg-teal-500">
-                Chess.Com
-              </span>
-              <span className="rounded-xl bg-gray-400 px-2 py-1 text-sm hover:cursor-not-allowed">
-                LiChess
-              </span>
-            </div>
           </div>
         </form>
         {player && (
@@ -148,7 +140,7 @@ export default function UserSignuUp() {
             <div>
               <h2>{player.username}</h2>
               <button
-                className="rounded-lg bg-cyan-300 px-2 py-2 hover:bg-cyan-400"
+                className="rounded-lg bg-emerald-400 px-2 py-2 hover:bg-emerald-500"
                 onClick={connectPlayer}
               >
                 Save user
