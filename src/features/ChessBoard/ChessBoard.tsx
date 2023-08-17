@@ -5,7 +5,7 @@ import type { Piece, Square } from "react-chessboard/dist/chessboard/types";
 import { ArrowPathIcon, ArrowsUpDownIcon } from "@heroicons/react/24/outline";
 import { ValidateGameFENorPGN } from "~/helpers/validateFENOrPGN";
 import { parse } from "@mliebelt/pgn-parser";
-import PGNView from "./PGNView";
+//import PGNView from "./PGNView";
 type move =
   | string
   | {

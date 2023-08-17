@@ -46,7 +46,7 @@ export default function AnalysisCard({
         </div>
         <ChessBoardComponent
           chessBoardWidth={350}
-          startingPosition={notebook.position!}
+          startingPosition={notebook.position}
         />
       </div>
     </>
