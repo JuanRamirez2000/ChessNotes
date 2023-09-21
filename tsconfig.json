@@ -27,6 +27,6 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.cjs",
-    "**/*.mjs", "src/features/ChessBoard"],
+    "**/*.mjs",],
   "exclude": ["node_modules"]
 }
